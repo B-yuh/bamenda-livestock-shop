@@ -496,17 +496,16 @@ async function resendCode() {
 async function handleSignUp(event) {
     event.preventDefault();
     
-    const formData = new FormData(event.target);
-    const name = formData.get('name');
-    const phone = formData.get('phone');
-    const location = formData.get('location');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirmPassword');
-    const verificationCode = formData.get('verificationCode');
+    // Get form values directly from input elements
+    const name = document.getElementById('signupName').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim();
+    const location = document.getElementById('signupLocation').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const verificationCode = document.getElementById('verificationCode').value.trim();
     
     // Validation
-    if (password !== confirmPassword) {
-        showNotification('Passwords do not match!', 'error');
+    if (!name || !phone || !location || !password) {
+        showNotification('Please fill in all required fields!', 'error');
         return;
     }
     
@@ -551,7 +550,7 @@ async function handleSignUp(event) {
     // Save user to localStorage (in production, this would go to a database)
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     users.push(user);
-    localStorage.setItem('users', JSON.stringify(user));
+    localStorage.setItem('users', JSON.stringify(users));
     
     // Log in the user
     currentUser = user;
@@ -565,9 +564,15 @@ async function handleSignUp(event) {
 function handleSignIn(event) {
     event.preventDefault();
     
-    const formData = new FormData(event.target);
-    const phone = formData.get('phone');
-    const password = formData.get('password');
+    // Get form values directly from input elements
+    const phone = document.getElementById('signinPhone').value.trim();
+    const password = document.getElementById('signinPassword').value;
+    
+    // Validation
+    if (!phone || !password) {
+        showNotification('Please fill in all fields!', 'error');
+        return;
+    }
     
     // Get users from localStorage
     const users = JSON.parse(localStorage.getItem('users') || '[]');

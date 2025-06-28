@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bamenda Livestock Shop Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    h1 { color: #2e7d32; }
+    section { margin-bottom: 2rem; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; }
+    th { background: #f8f9fa; }
+    tr:nth-child(even) { background: #f3f3f3; }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <section>
+    <h2>Users</h2>
+    <table id="usersTable"><thead><tr><th>Name</th><th>Phone</th><th>Location</th><th>Created</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section>
+    <h2>Orders</h2>
+    <table id="ordersTable"><thead><tr><th>User</th><th>Items</th><th>Total</th><th>Created</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section>
+  <h2>Products</h2>
+  <form id="productForm">
+    <input type="hidden" id="productId">
+    <input type="text" id="prodName" placeholder="Name" required>
+    <input type="text" id="prodCategory" placeholder="Category" required>
+    <input type="number" id="prodPrice" placeholder="Price" required>
+    <input type="text" id="prodImage" placeholder="Image (URL or icon class)">
+    <input type="text" id="prodDesc" placeholder="Description" required>
+    <button type="submit">Save Product</button>
+    <button type="button" id="cancelEdit" style="display:none;">Cancel</button>
+  </form>
+  <table id="productsTable">
+    <thead>
+      <tr>
+        <th>Name</th><th>Category</th><th>Price</th><th>Description</th><th>Image</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+  <section>
+    <h2>Vet Questions</h2>
+    <table id="vetTable"><thead><tr><th>Name</th><th>Phone</th><th>Question</th><th>Created</th></tr></thead><tbody></tbody></table>
+  </section>
+  <script>
+    // Change this if your backend runs on a different port
+    const API = 'http://localhost:5000/api';
+
+    async function fetchAndShow(endpoint, tableId, rowFn) {
+      const res = await fetch(API + endpoint);
+      const data = await res.json();
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      tbody.innerHTML = '';
+      data.forEach(row => tbody.innerHTML += rowFn(row));
+    }
+
+    // Fetch users
+    fetchAndShow('/users', 'usersTable', u =>
+      `<tr><td>${u.name}</td><td>${u.phone}</td><td>${u.location}</td><td>${new Date(u.createdAt).toLocaleString()}</td></tr>`
+    );
+    // Fetch orders
+    fetchAndShow('/orders', 'ordersTable', o =>
+      `<tr><td>${o.user?.name || o.user}</td><td>${o.items.map(i => i.name + ' x' + i.quantity).join('<br>')}</td><td>${o.total}</td><td>${new Date(o.createdAt).toLocaleString()}</td></tr>`
+    );
+    // Fetch vet questions
+    fetchAndShow('/vet-questions', 'vetTable', v =>
+      `<tr><td>${v.name}</td><td>${v.phone}</td><td>${v.question}</td><td>${new Date(v.createdAt).toLocaleString()}</td></tr>`
+    );
+    
+  </script>
+  <script>
+async function loadProducts() {
+  const res = await fetch(API + '/products');
+  const products = await res.json();
+  const tbody = document.querySelector('#productsTable tbody');
+  tbody.innerHTML = '';
+  products.forEach(p => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${p.name}</td>
+        <td>${p.category}</td>
+        <td>${p.price}</td>
+        <td>${p.description}</td>
+        <td>${p.image ? `<img src="${p.image}" alt="" style="width:40px;height:40px;">` : ''}</td>
+        <td>
+          <button onclick="editProduct('${p._id}')">Edit</button>
+          <button onclick="deleteProduct('${p._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+loadProducts();
+
+document.getElementById('productForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const id = document.getElementById('productId').value;
+  const data = {
+    name: document.getElementById('prodName').value,
+    category: document.getElementById('prodCategory').value,
+    price: document.getElementById('prodPrice').value,
+    description: document.getElementById('prodDesc').value,
+    image: document.getElementById('prodImage').value
+  };
+  if (id) {
+    await fetch(API + '/products/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  } else {
+    await fetch(API + '/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+  }
+  this.reset();
+  document.getElementById('cancelEdit').style.display = 'none';
+  loadProducts();
+};
+
+window.editProduct = async function(id) {
+  const res = await fetch(API + '/products');
+  const products = await res.json();
+  const p = products.find(x => x._id === id);
+  document.getElementById('productId').value = p._id;
+  document.getElementById('prodName').value = p.name;
+  document.getElementById('prodCategory').value = p.category;
+  document.getElementById('prodPrice').value = p.price;
+  document.getElementById('prodDesc').value = p.description;
+  document.getElementById('prodImage').value = p.image || '';
+  document.getElementById('cancelEdit').style.display = '';
+};
+
+window.deleteProduct = async function(id) {
+  if (confirm('Delete this product?')) {
+    await fetch(API + '/products/' + id, { method: 'DELETE' });
+    loadProducts();
+  }
+};
+
+document.getElementById('cancelEdit').onclick = function() {
+  document.getElementById('productForm').reset();
+  document.getElementById('productId').value = '';
+  this.style.display = 'none';
+};
+</script>
+<!-- List Your Product Button (put this in your navigation or header if you want) -->
+<button class="btn btn-primary" onclick="openListProductModal()" style="margin: 1rem auto; display: block;">List Your Product</button>
+
+<!-- List Your Product Modal and Overlay -->
+<div class="modal" id="listProductModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>List Your Product</h2>
+      <button class="close-modal" onclick="closeListProductModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <form id="listProductForm" class="auth-form">
+      <div class="form-group">
+        <label for="listName">Product Name</label>
+        <input type="text" id="listName" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="listCategory">Category</label>
+        <input type="text" id="listCategory" name="category" required>
+      </div>
+      <div class="form-group">
+        <label for="listPrice">Price</label>
+        <input type="number" id="listPrice" name="price" required>
+      </div>
+      <div class="form-group">
+        <label for="listImage">Image URL</label>
+        <input type="text" id="listImage" name="image">
+      </div>
+      <div class="form-group">
+        <label for="listDesc">Description</label>
+        <textarea id="listDesc" name="description" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="listProductOverlay" onclick="closeListProductModal()"></div>
+</body>
+</html>

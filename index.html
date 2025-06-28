@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bamenda Livestock Shop - Buy & Sell Livestock, Poultry & Accessories</title>
+    <meta name="description" content="Bamenda's premier livestock shop. Buy and sell poultry, livestock, and farming accessories. WhatsApp ordering available.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-cow"></i>
+                    <h1>Bamenda Livestock Shop</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search products...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                    <div class="user-actions">
+                        <div class="user-menu" id="userNotLoggedIn">
+                            <button class="btn btn-outline" onclick="openSignInModal()">Sign In</button>
+                            <button class="btn btn-primary" onclick="openSignUpModal()">Sign Up</button>
+                        </div>
+                        <div class="user-menu" id="userLoggedIn" style="display: none;">
+                            <button class="btn btn-outline" onclick="toggleUserMenu()">
+                                <i class="fas fa-user"></i>
+                                <span id="userName">User</span>
+                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <a href="#" onclick="showUserProfile()">Profile</a>
+                                <a href="#" onclick="showOrderHistory()">Orders</a>
+                                <a href="#" onclick="logout()">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="whatsapp-contact">
+                        <a href="https://wa.me/237681837578" class="whatsapp-btn" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#categories" class="nav-link">Categories</a></li>
+                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#ask-vet" class="nav-link">Ask a Vet</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Bamenda's Premier Livestock Shop</h2>
+                    <p>Quality livestock, poultry, and farming accessories. Connect with trusted sellers and buyers in Bamenda, Cameroon.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="scrollToSection('products')">
+                            Browse Products
+                        </button>
+                        <button class="btn btn-outline btn-large" onclick="openSignUpModal()">
+                            Start Selling
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-placeholder">
+                        <i class="fas fa-cow"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="categories">
+            <div class="container">
+                <h2 class="section-title">Product Categories</h2>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="filterByCategory('poultry')">
+                        <div class="category-icon">
+                            <i class="fas fa-kiwi-bird"></i>
+                        </div>
+                        <h3>Poultry</h3>
+                        <p>Chickens, ducks, and other birds</p>
+                    </div>
+                    <div class="category-card" onclick="filterByCategory('livestock')">
+                        <div class="category-icon">
+                            <i class="fas fa-cow"></i>
+                        </div>
+                        <h3>Other Animals</h3>
+                        <p>Pigs, goats, cattle, and more</p>
+                    </div>
+                    <div class="category-card" onclick="filterByCategory('accessories')">
+                        <div class="category-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Accessories</h3>
+                        <p>Feeders, drinkers, and equipment</p>
+                    </div>
+                    <div class="category-card" onclick="filterByCategory('feed')">
+                        <div class="category-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Feed & Ingredients</h3>
+                        <p>Quality feed and nutrition</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="featured-products">
+            <div class="container">
+                <h2 class="section-title">Our Products</h2>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Partners Section -->
+        <section class="partners">
+            <div class="container">
+                <h2 class="section-title">Our Trusted Partners</h2>
+                <p class="section-subtitle">Working with leading companies in the livestock industry</p>
+                <div class="partners-grid">
+                    <div class="partner-card">
+                        <div class="partner-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>NAVETSE</h3>
+                        <p>Premium poultry solutions</p>
+                    </div>
+                    <div class="partner-card">
+                        <div class="partner-logo">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>LIVESTOCKFUSION</h3>
+                        <p>Innovative livestock technology</p>
+                    </div>
+                    <div class="partner-card">
+                        <div class="partner-logo">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>NEVICIG</h3>
+                        <p>Quality feed and nutrition</p>
+                    </div>
+                    <div class="partner-card">
+                        <div class="partner-logo">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                        <h3>TLG</h3>
+                        <p>Farming equipment and tools</p>
+                    </div>
+                    <div class="partner-card">
+                        <div class="partner-logo">
+                            <i class="fas fa-cock"></i>
+                        </div>
+                        <h3>RED COCK</h3>
+                        <p>Specialized poultry breeding</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>About Bamenda Livestock Shop</h2>
+                        <p>We are the leading livestock shop in Bamenda, Cameroon, connecting farmers, breeders, and buyers in a trusted, secure environment.</p>
+                        <div class="features">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Trusted Sellers</h3>
+                                <p>All our sellers are verified and trusted members of the community</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-truck"></i>
+                                <h3>Multiple Pickup Locations</h3>
+                                <p>Choose from various pickup locations across Bamenda</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-whatsapp"></i>
+                                <h3>WhatsApp Ordering</h3>
+                                <p>Easy ordering and communication via WhatsApp</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-credit-card"></i>
+                                <h3>Flexible Payment</h3>
+                                <p>Pay before delivery, on delivery, or on pickup</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-image">
+                        <div class="about-placeholder">
+                            <i class="fas fa-farm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ask a Vet Section -->
+        <section id="ask-vet" class="ask-vet">
+            <div class="container">
+                <h2 class="section-title">Ask a Vet</h2>
+                <p class="section-subtitle">Get expert advice from our veterinary professionals</p>
+                <form id="askVetForm" class="ask-vet-form">
+                    <div class="form-group">
+                        <label for="vetName">Your Name</label>
+                        <input type="text" id="vetName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vetPhone">Phone Number</label>
+                        <input type="tel" id="vetPhone" placeholder="+237XXXXXXXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vetQuestion">Your Question</label>
+                        <textarea id="vetQuestion" rows="4" placeholder="Describe your livestock issue or question..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Question</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">Contact Us</h2>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+237 681 837 578</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-whatsapp"></i>
+                            <div>
+                                <h4>WhatsApp</h4>
+                                <p>+237 681 837 578</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Location</h4>
+                                <p>Bamenda, Cameroon</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Business Hours</h4>
+                                <p>Monday - Saturday: 8:00 AM - 6:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">₦0</span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">
+                <i class="fab fa-whatsapp"></i>
+                Order via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signUpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="close-modal" onclick="closeSignUpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signUpForm" class="auth-form">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="+237XXXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupLocation">Location</label>
+                    <input type="text" id="signupLocation" placeholder="Bamenda, Cameroon" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" minlength="6" required>
+                </div>
+                <div class="form-group verification-group" id="verificationGroup" style="display: none;">
+                    <label for="verificationCode">Verification Code</label>
+                    <input type="text" id="verificationCode" placeholder="Enter 6-digit code" maxlength="6">
+                    <button type="button" class="btn btn-outline btn-small" onclick="resendCode()">Resend Code</button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" onclick="switchToSignIn()">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div class="modal" id="signInModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sign In</h2>
+                <button class="close-modal" onclick="closeSignInModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="signInForm" class="auth-form">
+                <div class="form-group">
+                    <label for="signinPhone">Phone Number</label>
+                    <input type="tel" id="signinPhone" placeholder="+237XXXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label for="signinPassword">Password</label>
+                    <input type="password" id="signinPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" onclick="switchToSignUp()">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- List Product Modal -->
+    <div class="modal" id="listProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>List Your Product</h2>
+                <button class="close-modal" onclick="closeListProductModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="listProductForm" class="auth-form">
+                <div class="form-group">
+                    <label for="listName">Product Name</label>
+                    <input type="text" id="listName" required>
+                </div>
+                <div class="form-group">
+                    <label for="listPrice">Price (₦)</label>
+                    <input type="number" id="listPrice" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="listCategory">Category</label>
+                    <select id="listCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="poultry">Poultry</option>
+                        <option value="livestock">Other Animals</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="feed">Feed & Ingredients</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="listDescription">Description</label>
+                    <textarea id="listDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="listImage">Product Image</label>
+                    <div class="file-upload-container">
+                        <input type="file" id="listImage" accept="image/*" onchange="previewImage(this)">
+                        <label for="listImage" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose an image or drag it here</span>
+                        </label>
+                    </div>
+                    <div id="imagePreview" style="display: none;">
+                        <img id="previewImg" src="" alt="Preview">
+                        <button type="button" class="remove-image" onclick="removeImage()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">List Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Bamenda Livestock Shop</h3>
+                    <p>Connecting farmers, breeders, and buyers in Bamenda, Cameroon.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#categories">Categories</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#products" onclick="filterByCategory('poultry')">Poultry</a></li>
+                        <li><a href="#products" onclick="filterByCategory('livestock')">Other Animals</a></li>
+                        <li><a href="#products" onclick="filterByCategory('accessories')">Accessories</a></li>
+                        <li><a href="#products" onclick="filterByCategory('feed')">Feed & Ingredients</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +237 681 837 578</p>
+                    <p><i class="fas fa-whatsapp"></i> +237 681 837 578</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Bamenda, Cameroon</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bamenda Livestock Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

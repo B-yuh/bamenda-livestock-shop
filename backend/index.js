@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Order = require('./Order');
+const Order = require('./order');
 const VetQuestion = require('./VetQuestion');
-const Product = require('./Product');
+const Product = require('./product');
 require('dotenv').config();
 
 const app = express();
@@ -18,11 +18,14 @@ app.get('/', (req, res) => {
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected!'))
-  .catch(err => console.log('MongoDB connection error:', err));
+  .catch(err => {
+    console.log('MongoDB connection error:', err);
+    console.log('Running in demo mode without database...');
+  });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-const User = require('./User');
+const User = require('./user');
 
 // Signup route
 app.post('/api/signup', async (req, res) => {

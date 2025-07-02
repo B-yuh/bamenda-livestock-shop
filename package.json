@@ -1,0 +1,37 @@
+{
+  "name": "bamenda-livestock-shop",
+  "version": "1.0.0",
+  "description": "A comprehensive e-commerce platform for buying and selling livestock, poultry, and farming accessories in Bamenda, Cameroon",
+  "main": "index.html",
+  "scripts": {
+    "start": "npm run start:backend & npm run start:frontend",
+    "start:backend": "cd backend && node index.js",
+    "start:frontend": "python3 -m http.server 8080",
+    "install:backend": "cd backend && npm install",
+    "dev": "npm run install:backend && npm run start",
+    "build": "echo 'Frontend is ready for deployment'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "livestock",
+    "e-commerce",
+    "farming",
+    "poultry",
+    "cameroon",
+    "bamenda",
+    "agriculture"
+  ],
+  "author": "Bamenda Livestock Shop",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/bamenda-livestock-shop.git"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
